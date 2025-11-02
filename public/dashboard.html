@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - CelerHost</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00ff88;
+            --primary-dark: #00cc6a;
+            --dark: #0f0f0f;
+            --dark-light: #1a1a1a;
+            --dark-lighter: #2d2d2d;
+            --text: #ffffff;
+            --text-light: #cccccc;
+            --error: #ff4444;
+            --success: #00ff88;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--dark);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            color: var(--primary);
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            color: var(--text-light);
+        }
+
+        .btn {
+            background: var(--primary);
+            color: var(--dark);
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: 2px solid var(--primary);
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: transparent;
+            color: var(--primary);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: var(--dark);
+        }
+
+        .dashboard {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .welcome-section {
+            background: var(--dark-light);
+            padding: 3rem;
+            border-radius: 15px;
+            border: 1px solid #333;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .welcome-section h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-section p {
+            color: var(--text-light);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--dark-light);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid #333;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--dark-light);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid #333;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .feature-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-card p {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .alert.info {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading i {
+            color: var(--primary);
+            font-size: 2rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                padding: 1rem;
+            }
+            
+            .welcome-section {
+                padding: 2rem 1rem;
+            }
+            
+            .welcome-section h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-server"></i>
+                CelerHost
+            </div>
+            <div class="user-menu">
+                <span class="user-info" id="userInfo">Cargando...</span>
+                <button class="btn-outline" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard">
+        <div id="loading" class="loading">
+            <i class="fas fa-spinner"></i>
+            <p>Cargando dashboard...</p>
+        </div>
+
+        <div id="content" style="display: none;">
+            <!-- Welcome Section -->
+            <div class="welcome-section">
+                <h1>Bienvenido a tu Panel de Control</h1>
+                <p id="welcomeMessage">Gestiona tus servidores y configura tus servicios</p>
+                <div class="hero-buttons">
+                    <a href="#servers" class="btn">
+                        <i class="fas fa-server"></i> Mis Servidores
+                    </a>
+                    <a href="#billing" class="btn-outline">
+                        <i class="fas fa-credit-card"></i> Facturación
+                    </a>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <div class="stat-number" id="serverCount">0</div>
+                    <div class="stat-label">Servidores Activos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-number" id="uptime">99.9%</div>
+                    <div class="stat-label">Tiempo de Actividad</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-number" id="playerCount">0</div>
+                    <div class="stat-label">Jugadores Conectados</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-hdd"></i>
+                    </div>
+                    <div class="stat-number" id="storageUsed">0 GB</div>
+                    <div class="stat-label">Almacenamiento Usado</div>
+                </div>
+            </div>
+
+            <!-- Features Grid -->
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3><i class="fas fa-plus-circle"></i> Crear Servidor</h3>
+                    <p>Configura un nuevo servidor de juego en minutos. Elige entre Minecraft, Counter-Strike, GTA V y más.</p>
+                    <button class="btn" onclick="createServer()">
+                        <i class="fas fa-plus"></i> Nuevo Servidor
+                    </button>
+                </div>
+                <div class="feature-card">
+                    <h3><i class="fas fa-cog"></i> Panel de Control</h3>
+                    <p>Gestiona tu servidor: reiniciar, apagar, instalar plugins y mods fácilmente.</p>
+                    <button class="btn-outline" onclick="manageServer()">
+                        <i class="fas fa-wrench"></i> Gestionar
+                    </button>
+                </div>
+                <div class="feature-card">
+                    <h3><i class="fas fa-file-invoice-dollar"></i> Facturación</h3>
+                    <p>Revisa tus facturas, métodos de pago y el historial de transacciones.</p>
+                    <button class="btn-outline" onclick="viewBilling()">
+                        <i class="fas fa-receipt"></i> Ver Facturación
+                    </button>
+                </div>
+                <div class="feature-card">
+                    <h3><i class="fas fa-headset"></i> Soporte</h3>
+                    <p>¿Necesitas ayuda? Crea un ticket de soporte y nuestro equipo te ayudará.</p>
+                    <button class="btn-outline" onclick="openSupport()">
+                        <i class="fas fa-ticket-alt"></i> Contactar Soporte
+                    </button>
+                </div>
+            </div>
+
+            <!-- Admin Alert -->
+            <div id="adminAlert" class="alert info" style="display: none;">
+                <i class="fas fa-shield-alt"></i> 
+                <strong>Modo Administrador:</strong> Tienes acceso a todas las funciones del sistema.
+            </div>
+        </div>
+
+        <!-- Not Authenticated -->
+        <div id="notAuth" style="display: none; text-align: center; padding: 4rem;">
+            <div class="welcome-section">
+                <h1 style="color: var(--error);">Acceso No Autorizado</h1>
+                <p>Debes iniciar sesión para acceder al dashboard.</p>
+                <div class="hero-buttons">
+                    <a href="/login" class="btn">Iniciar Sesión</a>
+                    <a href="/" class="btn-outline">Volver al Inicio</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Verificar autenticación y cargar datos del usuario
+        async function loadDashboard() {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            
+            const loadingDiv = document.getElementById('loading');
+            const contentDiv = document.getElementById('content');
+            const notAuthDiv = document.getElementById('notAuth');
+            const userInfo = document.getElementById('userInfo');
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            const adminAlert = document.getElementById('adminAlert');
+
+            if (!token || !user.id) {
+                loadingDiv.style.display = 'none';
+                notAuthDiv.style.display = 'block';
+                return;
+            }
+
+            try {
+                // Verificar token con el servidor
+                const response = await fetch('/api/auth/verify', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.valid) {
+                    // Mostrar información del usuario
+                    userInfo.textContent = `Hola, ${data.user.username}`;
+                    welcomeMessage.textContent = `Bienvenido de nuevo ${data.user.username}. Gestiona tus servidores desde aquí.`;
+                    
+                    // Mostrar alerta de admin si es administrador
+                    if (data.user.role === 'admin') {
+                        adminAlert.style.display = 'block';
+                    }
+
+                    // Simular datos de servidores (luego vendrán de la base de datos)
+                    document.getElementById('serverCount').textContent = '1';
+                    document.getElementById('playerCount').textContent = '8';
+                    document.getElementById('storageUsed').textContent = '2.5 GB';
+
+                    loadingDiv.style.display = 'none';
+                    contentDiv.style.display = 'block';
+                } else {
+                    throw new Error('Token inválido');
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                loadingDiv.style.display = 'none';
+                notAuthDiv.style.display = 'block';
+            }
+        }
+
+        // Funciones del dashboard
+        function createServer() {
+            alert('🚀 Función "Crear Servidor" - En desarrollo');
+        }
+
+        function manageServer() {
+            alert('⚙️ Función "Gestionar Servidor" - En desarrollo');
+        }
+
+        function viewBilling() {
+            alert('💳 Función "Facturación" - En desarrollo');
+        }
+
+        function openSupport() {
+            alert('🎫 Función "Soporte" - En desarrollo');
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+        }
+
+        // Cargar dashboard cuando la página esté lista
+        document.addEventListener('DOMContentLoaded', loadDashboard);
+    </script>
+</body>
+</html>
