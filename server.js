@@ -17,6 +17,7 @@ app.use(express.static('public'));
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api/tickets', require('./routes/tickets'));
 
 // API de planes
 app.get('/api/planes', async (req, res) => {
