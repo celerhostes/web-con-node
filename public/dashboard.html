@@ -94,6 +94,12 @@
             color: var(--dark);
         }
 
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            margin-left: 1rem;
+        }
+
         .dashboard {
             max-width: 1200px;
             margin: 0 auto;
@@ -203,6 +209,10 @@
             background: rgba(0, 255, 136, 0.1);
             border: 1px solid var(--primary);
             color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
         }
 
         .loading {
@@ -233,6 +243,11 @@
             .welcome-section h1 {
                 font-size: 2rem;
             }
+
+            .alert.info {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
         }
     </style>
 </head>
@@ -261,6 +276,17 @@
         </div>
 
         <div id="content" style="display: none;">
+            <!-- Admin Alert -->
+            <div id="adminAlert" class="alert info" style="display: none;">
+                <i class="fas fa-shield-alt"></i> 
+                <div>
+                    <strong>Modo Administrador:</strong> Tienes acceso a todas las funciones del sistema.
+                </div>
+                <a href="/admin" class="btn btn-sm">
+                    <i class="fas fa-cog"></i> Panel de Admin
+                </a>
+            </div>
+
             <!-- Welcome Section -->
             <div class="welcome-section">
                 <h1>Bienvenido a tu Panel de Control</h1>
@@ -338,12 +364,6 @@
                     </button>
                 </div>
             </div>
-
-            <!-- Admin Alert -->
-            <div id="adminAlert" class="alert info" style="display: none;">
-                <i class="fas fa-shield-alt"></i> 
-                <strong>Modo Administrador:</strong> Tienes acceso a todas las funciones del sistema.
-            </div>
         </div>
 
         <!-- Not Authenticated -->
@@ -395,7 +415,7 @@
                     
                     // Mostrar alerta de admin si es administrador
                     if (data.user.role === 'admin') {
-                        adminAlert.style.display = 'block';
+                        adminAlert.style.display = 'flex';
                     }
 
                     // Simular datos de servidores (luego vendrán de la base de datos)
