@@ -292,7 +292,7 @@
                 <h1>Bienvenido a tu Panel de Control</h1>
                 <p id="welcomeMessage">Gestiona tus servidores y configura tus servicios</p>
                 <div class="hero-buttons">
-                    <a href="#servers" class="btn">
+                    <a href="/servers" class="btn">
                         <i class="fas fa-server"></i> Mis Servidores
                     </a>
                     <a href="#billing" class="btn-outline">
@@ -338,16 +338,16 @@
                 <div class="feature-card">
                     <h3><i class="fas fa-plus-circle"></i> Crear Servidor</h3>
                     <p>Configura un nuevo servidor de juego en minutos. Elige entre Minecraft, Counter-Strike, GTA V y más.</p>
-                    <button class="btn" onclick="createServer()">
-                        <i class="fas fa-plus"></i> Nuevo Servidor
-                    </button>
+                    <a href="/servers" class="btn">
+                        <i class="fas fa-plus"></i> Gestionar Servidores
+                    </a>
                 </div>
                 <div class="feature-card">
                     <h3><i class="fas fa-cog"></i> Panel de Control</h3>
                     <p>Gestiona tu servidor: reiniciar, apagar, instalar plugins y mods fácilmente.</p>
-                    <button class="btn-outline" onclick="manageServer()">
+                    <a href="/servers" class="btn-outline">
                         <i class="fas fa-wrench"></i> Gestionar
-                    </button>
+                    </a>
                 </div>
                 <div class="feature-card">
                     <h3><i class="fas fa-file-invoice-dollar"></i> Facturación</h3>
@@ -439,14 +439,6 @@
         }
 
         // Funciones del dashboard
-        function createServer() {
-            alert('🚀 Función "Crear Servidor" - En desarrollo');
-        }
-
-        function manageServer() {
-            alert('⚙️ Función "Gestionar Servidor" - En desarrollo');
-        }
-
         function viewBilling() {
             alert('💳 Función "Facturación" - En desarrollo');
         }

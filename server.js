@@ -18,6 +18,7 @@ app.use(express.static('public'));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/tickets', require('./routes/tickets'));
+app.use('/api/servers', require('./routes/servers'));
 
 // API de planes
 app.get('/api/planes', async (req, res) => {
@@ -52,6 +53,14 @@ app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
+app.get('/tickets', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'tickets.html'));
+});
+
+app.get('/servers', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'servers.html'));
+});
+
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'CelerHost API funcionando' });
@@ -75,5 +84,7 @@ initDatabase().then(() => {
     console.log(`📊 Sistema de autenticación activo`);
     console.log(`🗄️ Base de datos conectada`);
     console.log(`👑 Panel de administración disponible en /admin`);
+    console.log(`🎫 Sistema de tickets disponible en /tickets`);
+    console.log(`🖥️ Panel de servidores disponible en /servers`);
   });
 });

@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servidores - CelerHost</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00ff88;
+            --primary-dark: #00cc6a;
+            --dark: #0f0f0f;
+            --dark-light: #1a1a1a;
+            --dark-lighter: #2d2d2d;
+            --text: #ffffff;
+            --text-light: #cccccc;
+            --error: #ff4444;
+            --success: #00ff88;
+            --warning: #ffaa00;
+            --info: #0099ff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--dark);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            color: var(--primary);
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            color: var(--text-light);
+        }
+
+        .btn {
+            background: var(--primary);
+            color: var(--dark);
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: 2px solid var(--primary);
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn:hover {
+            background: transparent;
+            color: var(--primary);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: var(--dark);
+        }
+
+        .btn-danger {
+            background: var(--error);
+            border-color: var(--error);
+        }
+
+        .btn-danger:hover {
+            background: transparent;
+            color: var(--error);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .title {
+            color: var(--primary);
+            font-size: 2.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--dark-light);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #333;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .servers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .server-card {
+            background: var(--dark-light);
+            border-radius: 15px;
+            border: 1px solid #333;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .server-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.1);
+        }
+
+        .server-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .server-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .server-icon {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .server-details h3 {
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .server-details p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .server-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .status-active {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success);
+        }
+
+        .status-stopped {
+            background: rgba(255, 68, 68, 0.2);
+            color: var(--error);
+        }
+
+        .status-installing {
+            background: rgba(255, 170, 0, 0.2);
+            color: var(--warning);
+        }
+
+        .status-restarting {
+            background: rgba(0, 153, 255, 0.2);
+            color: var(--info);
+        }
+
+        .server-stats {
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label-small {
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #333;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+
+        .server-actions {
+            padding: 1.5rem;
+            border-top: 1px solid #333;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .no-servers {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem;
+            background: var(--dark-light);
+            border-radius: 15px;
+            border: 1px solid #333;
+        }
+
+        .no-servers i {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .no-servers h3 {
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        .no-servers p {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .alert.success {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .alert.error {
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid var(--error);
+            color: var(--error);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .loading i {
+            color: var(--primary);
+            font-size: 2rem;
+            animation: spin 1s linear infinite;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--dark-light);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #333;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .close-modal:hover {
+            color: var(--error);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #333;
+            border-radius: 6px;
+            background: var(--dark-lighter);
+            color: var(--text);
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .game-option {
+            background: var(--dark-lighter);
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .game-option:hover {
+            border-color: var(--primary);
+        }
+
+        .game-option.selected {
+            border-color: var(--primary);
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .game-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .game-name {
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .plan-option {
+            background: var(--dark-lighter);
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .plan-option:hover {
+            border-color: var(--primary);
+        }
+
+        .plan-option.selected {
+            border-color: var(--primary);
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .plan-name {
+            color: var(--primary);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-details {
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .servers-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .server-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .server-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-server"></i>
+                CelerHost Servers
+            </div>
+            <div class="user-menu">
+                <span class="user-info" id="userInfo">Cargando...</span>
+                <a href="/dashboard" class="btn-outline">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <button class="btn-outline" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Mis Servidores</h1>
+            <button class="btn" onclick="openCreateServerModal()">
+                <i class="fas fa-plus"></i> Nuevo Servidor
+            </button>
+        </div>
+
+        <!-- Alerts -->
+        <div id="alert" class="alert"></div>
+
+        <!-- Loading -->
+        <div id="loading" class="loading">
+            <i class="fas fa-spinner"></i>
+            <p>Cargando servidores...</p>
+        </div>
+
+        <div id="content" style="display: none;">
+            <!-- Stats Grid (solo admin) -->
+            <div class="stats-grid" id="statsGrid" style="display: none;">
+                <!-- Las estadísticas se cargarán para admin -->
+            </div>
+
+            <!-- Servers Grid -->
+            <div class="servers-grid" id="serversGrid">
+                <!-- Los servidores se cargarán aquí -->
+            </div>
+        </div>
+
+        <!-- Not Authenticated -->
+        <div id="notAuth" style="display: none; text-align: center; padding: 4rem;">
+            <div style="background: var(--dark-light); padding: 3rem; border-radius: 15px; border: 1px solid #333;">
+                <h1 style="color: var(--error); font-size: 2.5rem; margin-bottom: 1rem;">
+                    <i class="fas fa-ban"></i>
+                </h1>
+                <h2 style="color: var(--error); margin-bottom: 1rem;">Acceso Denegado</h2>
+                <p style="color: var(--text-light); margin-bottom: 2rem;">
+                    Debes iniciar sesión para acceder a tus servidores.
+                </p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="/login" class="btn">Iniciar Sesión</a>
+                    <a href="/" class="btn-outline">Volver al Inicio</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="createServerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Crear Nuevo Servidor</h3>
+                <button class="close-modal" onclick="closeModal('createServerModal')">&times;</button>
+            </div>
+            <form id="createServerForm">
+                <div class="form-group">
+                    <label class="form-label">Nombre del Servidor:</label>
+                    <input type="text" class="form-input" id="serverName" required placeholder="Ej: Mi Servidor Minecraft">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Selecciona un Juego:</label>
+                    <div class="games-grid" id="gamesGrid">
+                        <!-- Los juegos se cargarán aquí -->
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Selecciona un Plan:</label>
+                    <div class="plans-grid" id="plansGrid">
+                        <!-- Los planes se cargarán aquí -->
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button type="submit" class="btn">Crear Servidor</button>
+                    <button type="button" class="btn-outline" onclick="closeModal('createServerModal')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="serverDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="serverDetailsTitle">Detalles del Servidor</h3>
+                <button class="close-modal" onclick="closeModal('serverDetailsModal')">&times;</button>
+            </div>
+            <div id="serverDetailsContent">
+                <!-- Los detalles del servidor se cargarán aquí -->
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/servers.js"></script>
+</body>
+</html>
