@@ -16,6 +16,7 @@ app.use(express.static('public'));
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/admin', require('./routes/admin'));
 
 // API de planes
 app.get('/api/planes', async (req, res) => {
@@ -46,9 +47,24 @@ app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
 
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+});
+
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'CelerHost API funcionando' });
+});
+
+// Ruta temporal para crear admin - ELIMINAR DESPUÉS DE USAR
+app.post('/api/create-admin', async (req, res) => {
+  try {
+    const { pool } = require('./config/database');
+    await pool.query("UPDATE usuarios SET role = 'admin' WHERE id = 1");
+    res.json({ message: 'Usuario convertido a administrador' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // Inicializar base de datos y servidor
@@ -57,5 +73,6 @@ initDatabase().then(() => {
     console.log(`🚀 CelerHost running on port ${PORT}`);
     console.log(`📊 Sistema de autenticación activo`);
     console.log(`🗄️ Base de datos conectada`);
+    console.log(`👑 Panel de administración disponible en /admin`);
   });
 });
