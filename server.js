@@ -1,48 +1,61 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const { initDatabase } = require('./config/database');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 // Routes
+app.use('/api/auth', require('./routes/auth'));
+
+// API de planes
+app.get('/api/planes', async (req, res) => {
+  try {
+    const { pool } = require('./config/database');
+    const result = await pool.query('SELECT * FROM planes WHERE activo = true');
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching planes:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
+// Servir archivos estáticos
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.get('/api/planes', (req, res) => {
-    res.json([
-        {
-            id: 1,
-            nombre: "Básico",
-            precio: 9.99,
-            slots: 10,
-            ram: 2048,
-            almacenamiento: 10240
-        },
-        {
-            id: 2,
-            nombre: "Avanzado", 
-            precio: 19.99,
-            slots: 25,
-            ram: 4096,
-            almacenamiento: 20480
-        },
-        {
-            id: 3,
-            nombre: "Profesional",
-            precio: 39.99,
-            slots: 50,
-            ram: 8192,
-            almacenamiento: 40960
-        }
-    ]);
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
-app.listen(PORT, () => {
+app.get('/register', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'register.html'));
+});
+
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+});
+
+// Health check
+app.get('/health', (req, res) => {
+  res.json({ status: 'OK', message: 'CelerHost API funcionando' });
+});
+
+// Inicializar base de datos y servidor
+initDatabase().then(() => {
+  app.listen(PORT, () => {
     console.log(`🚀 CelerHost running on port ${PORT}`);
+    console.log(`📊 Sistema de autenticación activo`);
+    console.log(`🗄️ Base de datos conectada`);
+  });
 });
