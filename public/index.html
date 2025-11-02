@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CelerHost - Hosting para Juegos</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Arial', sans-serif; background: #0f0f0f; color: #fff; }
+        
+        .navbar { background: #1a1a1a; padding: 1rem 0; border-bottom: 2px solid #00ff88; }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; }
+        .logo { color: #00ff88; font-size: 1.8rem; font-weight: bold; }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { color: #fff; text-decoration: none; transition: color 0.3s; }
+        .nav-links a:hover { color: #00ff88; }
+        .btn { background: #00ff88; color: #0f0f0f; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+        
+        .hero { background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); padding: 100px 0; text-align: center; }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 1rem; background: linear-gradient(45deg, #00ff88, #00ccff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.3rem; margin-bottom: 2rem; color: #ccc; }
+        
+        .plans { padding: 80px 0; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 3rem; color: #00ff88; }
+        .plans-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .plan-card { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 2rem; text-align: center; transition: transform 0.3s; }
+        .plan-card:hover { transform: translateY(-5px); border-color: #00ff88; }
+        .plan-name { color: #00ff88; font-size: 1.5rem; margin-bottom: 1rem; }
+        .plan-price { font-size: 2.5rem; font-weight: bold; margin: 1rem 0; }
+        .plan-features { list-style: none; margin: 2rem 0; }
+        .plan-features li { padding: 0.8rem 0; border-bottom: 1px solid #333; color: #ccc; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">CelerHost</div>
+            <div class="nav-links">
+                <a href="#planes">Planes</a>
+                <a href="/login">Iniciar Sesión</a>
+                <a href="/register" class="btn">Registrarse</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Hosting para Servidores de Juegos</h1>
+            <p>Alto rendimiento para Minecraft, Counter-Strike, GTA V y más</p>
+            <a href="#planes" class="btn">Ver Planes</a>
+        </div>
+    </section>
+
+    <section id="planes" class="plans">
+        <div class="container">
+            <h2 class="section-title">Nuestros Planes</h2>
+            <div class="plans-grid" id="planes-container">
+                <!-- Los planes se cargarán con JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Cargar planes desde la API
+        async function loadPlans() {
+            try {
+                const response = await fetch('/api/planes');
+                const planes = await response.json();
+                
+                const container = document.getElementById('planes-container');
+                container.innerHTML = planes.map(plan => `
+                    <div class="plan-card">
+                        <h3 class="plan-name">${plan.nombre}</h3>
+                        <div class="plan-price">$${plan.precio}/mes</div>
+                        <ul class="plan-features">
+                            <li>${plan.slots} Slots de Jugadores</li>
+                            <li>${plan.ram}MB RAM DDR4</li>
+                            <li>${plan.almacenamiento}MB SSD NVMe</li>
+                            <li>Panel de Control Moderno</li>
+                            <li>Soporte 24/7</li>
+                        </ul>
+                        <a href="/register?plan=${plan.id}" class="btn">Contratar Ahora</a>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading plans:', error);
+            }
+        }
+
+        loadPlans();
+    </script>
+</body>
+</html>
